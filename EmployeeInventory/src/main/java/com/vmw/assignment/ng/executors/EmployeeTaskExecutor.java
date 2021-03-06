@@ -10,6 +10,13 @@ import com.vmw.assignment.ng.model.CurrentTaskStatus;
 import com.vmw.assignment.ng.model.EmployeeEntry;
 import com.vmw.assignment.ng.model.RequestScopedParameter;
 
+/**
+ * Task Executor accepts the task and delegate the execution to different
+ * handlers.
+ * 
+ * @author adarsh
+ *
+ */
 @Service
 public class EmployeeTaskExecutor {
 
@@ -23,6 +30,14 @@ public class EmployeeTaskExecutor {
 	@Autowired
 	RequestScopedParameter requestScopedParameter;
 
+	/**
+	 * Accepts the data related to the task and execute it. Delegates the execution
+	 * to different handlers. Each handler will update their intermediate status to
+	 * database.
+	 * 
+	 * @param employees
+	 * @throws RequestValidationFailedException
+	 */
 	public void execute(List<EmployeeEntry> employees) throws RequestValidationFailedException {
 		requestScopedParameter.saveTaskStatus(CurrentTaskStatus.VALIDATION_STARTS);
 		recordsValidator.validate(employees);

@@ -11,12 +11,22 @@ import com.vmw.assignment.ng.model.request.AddTaskStatusRequest;
 import com.vmw.assignment.ng.model.response.GetTaskStatusResponse;
 import com.vmw.assignment.ng.repository.TaskRepository;
 
+/**
+ * Business logics for Task Status operations are maintained in this class.
+ * 
+ * @author adarsh
+ *
+ */
 @Service
 public class TaskService {
 
 	@Autowired
 	private TaskRepository taskRepository;
 
+	/**
+	 * @param taskId
+	 * @return getTaskStatusResponse
+	 */
 	public ResponseEntity<GetTaskStatusResponse> getTaskStatus(String taskId) {
 		List<TaskStatus> taskStatusList = taskRepository.findAllTasksByTaskId(taskId);
 		GetTaskStatusResponse response = new GetTaskStatusResponse();
@@ -28,6 +38,10 @@ public class TaskService {
 		return ResponseEntity.ok(response);
 	}
 
+	/**
+	 * @param request
+	 * @return taskStatus
+	 */
 	public TaskStatus save(AddTaskStatusRequest request) {
 		TaskStatus taskStatus = new TaskStatus();
 		taskStatus.setId(request.getId());
@@ -35,6 +49,10 @@ public class TaskService {
 		return taskRepository.save(taskStatus);
 	}
 
+	/**
+	 * @param taskStatus
+	 * @return taskStatus
+	 */
 	public TaskStatus save(TaskStatus taskStatus) {
 		return taskRepository.save(taskStatus);
 	}

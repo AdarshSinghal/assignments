@@ -1,5 +1,9 @@
 package com.vmw.assignment.ng.model;
 
+/**
+ * @author adarsh
+ *
+ */
 public class EmployeeEntry {
 
 	private String name;

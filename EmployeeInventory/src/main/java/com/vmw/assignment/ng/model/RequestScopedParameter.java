@@ -13,13 +13,17 @@ import org.springframework.web.context.WebApplicationContext;
 import com.vmw.assignment.ng.model.dto.TaskStatus;
 import com.vmw.assignment.ng.repository.TaskRepository;
 
+/**
+ * @author adarsh
+ *
+ */
 @Component
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class RequestScopedParameter {
 
 	private String taskId;
-
 	private List<TaskStatus> taskStatusList;
+	private List<EmployeeEntry> employees;
 
 	@Autowired
 	private TaskRepository taskRepository;
@@ -48,6 +52,14 @@ public class RequestScopedParameter {
 
 	public void setTaskRepository(TaskRepository taskRepository) {
 		this.taskRepository = taskRepository;
+	}
+
+	public List<EmployeeEntry> getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(List<EmployeeEntry> employees) {
+		this.employees = employees;
 	}
 
 	public void saveTaskStatus(CurrentTaskStatus currentTaskStatus) {

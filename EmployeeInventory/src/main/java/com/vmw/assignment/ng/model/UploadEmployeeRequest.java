@@ -2,6 +2,10 @@ package com.vmw.assignment.ng.model;
 
 import java.util.List;
 
+/**
+ * @author adarsh
+ *
+ */
 public class UploadEmployeeRequest {
 
 	List<EmployeeEntry> employees;

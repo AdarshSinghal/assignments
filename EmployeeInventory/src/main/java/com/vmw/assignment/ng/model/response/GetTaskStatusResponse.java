@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.vmw.assignment.ng.model.dto.TaskStatus;
 
+/**
+ * @author adarsh
+ *
+ */
 public class GetTaskStatusResponse {
 
 	private String latestStatus;

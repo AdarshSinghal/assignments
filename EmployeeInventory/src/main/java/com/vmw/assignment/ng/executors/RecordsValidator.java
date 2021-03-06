@@ -11,12 +11,25 @@ import com.vmw.assignment.ng.model.CurrentTaskStatus;
 import com.vmw.assignment.ng.model.EmployeeEntry;
 import com.vmw.assignment.ng.model.RequestScopedParameter;
 
+/**
+ * Responsible for validation of records
+ * 
+ * @author adarsh
+ *
+ */
 @Component
 public class RecordsValidator {
 
 	@Autowired
 	RequestScopedParameter requestScopedParameter;
 
+	/**
+	 * Iterates all the employees and perform validation on each record and filter
+	 * out the malformed records.
+	 * 
+	 * @param employees
+	 * @throws RequestValidationFailedException
+	 */
 	public void validate(List<EmployeeEntry> employees) throws RequestValidationFailedException {
 
 		requestScopedParameter.saveTaskStatus(CurrentTaskStatus.VALIDATION_STARTS);

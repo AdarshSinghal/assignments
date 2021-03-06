@@ -4,6 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
+/**
+ * @author adarsh
+ *
+ */
 @Entity
 @IdClass(TaskStatusId.class)
 public class TaskStatus {

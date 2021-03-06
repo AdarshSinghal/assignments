@@ -16,16 +16,29 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import com.vmw.assignment.ng.constants.Constants;
 import com.vmw.assignment.ng.exceptions.RequestValidationFailedException;
 
+/**
+ * Exceptions should be handled here. If no exception matchees the current
+ * exception, then it returns the exception message provided by java.
+ * 
+ * @author adarsh
+ *
+ */
 @RestControllerAdvice
 public class ApplicationExceptionControllerAdvice {
 
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity<String> exception(Exception exception) {
 		return ResponseEntity.badRequest().body(getResponseForException(exception));
+	}
+
+	@ExceptionHandler({ MaxUploadSizeExceededException.class })
+	public ResponseEntity<String> fileSizeLimitExceededException(MaxUploadSizeExceededException exception) {
+		return ResponseEntity.badRequest().body(Constants.MAXIMUM_UPLOAD_SIZE_EXCEEDED);
 	}
 
 	@ExceptionHandler(value = DataIntegrityViolationException.class)

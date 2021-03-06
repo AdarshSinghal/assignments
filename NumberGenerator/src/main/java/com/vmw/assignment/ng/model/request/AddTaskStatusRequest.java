@@ -1,13 +1,17 @@
-package com.vmw.assignment.ng.model.dto;
+package com.vmw.assignment.ng.model.request;
 
-import java.io.Serializable;
-
-public class TaskStatusId implements Serializable {
-
-	private static final long serialVersionUID = -8278835896898050759L;
+public class AddTaskStatusRequest {
 
 	private String id;
 	private String status;
+
+	public AddTaskStatusRequest() {
+	}
+
+	public AddTaskStatusRequest(String id, String status) {
+		this.id = id;
+		this.status = status;
+	}
 
 	public String getId() {
 		return id;

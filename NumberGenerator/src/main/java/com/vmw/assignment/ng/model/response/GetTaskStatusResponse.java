@@ -1,8 +1,8 @@
-package com.vmw.assignment.ng.model;
+package com.vmw.assignment.ng.model.response;
 
 import java.util.List;
 
-import com.vmw.assignment.ng.model.dto.TaskStatus;
+import com.vmw.assignment.ng.model.entity.TaskStatus;
 
 public class GetTaskStatusResponse {
 

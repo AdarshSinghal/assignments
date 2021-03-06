@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.vmw.assignment.ng.model.AddTaskStatusRequest;
-import com.vmw.assignment.ng.model.GetTaskStatusResponse;
-import com.vmw.assignment.ng.model.dto.TaskStatus;
+import com.vmw.assignment.ng.model.entity.TaskStatus;
+import com.vmw.assignment.ng.model.request.AddTaskStatusRequest;
+import com.vmw.assignment.ng.model.response.GetTaskStatusResponse;
 import com.vmw.assignment.ng.repository.TaskRepository;
 
 @Service

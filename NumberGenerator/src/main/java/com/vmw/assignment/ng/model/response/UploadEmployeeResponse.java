@@ -1,4 +1,4 @@
-package com.vmw.assignment.ng.model;
+package com.vmw.assignment.ng.model.response;
 
 public class UploadEmployeeResponse {
 

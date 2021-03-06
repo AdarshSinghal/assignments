@@ -1,6 +1,8 @@
-package com.vmw.assignment.ng.model;
+package com.vmw.assignment.ng.model.request;
 
 import java.util.List;
+
+import com.vmw.assignment.ng.model.EmployeeEntry;
 
 public class UploadEmployeeRequest {
 

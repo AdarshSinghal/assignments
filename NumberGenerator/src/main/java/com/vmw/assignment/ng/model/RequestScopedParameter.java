@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.vmw.assignment.ng.model.dto.TaskStatus;
+import com.vmw.assignment.ng.model.entity.TaskStatus;
 import com.vmw.assignment.ng.repository.TaskRepository;
 
 @Component
@@ -18,8 +18,8 @@ import com.vmw.assignment.ng.repository.TaskRepository;
 public class RequestScopedParameter {
 
 	private String taskId;
-
 	private List<TaskStatus> taskStatusList;
+	private List<EmployeeEntry> employees;
 
 	@Autowired
 	private TaskRepository taskRepository;
@@ -48,6 +48,14 @@ public class RequestScopedParameter {
 
 	public void setTaskRepository(TaskRepository taskRepository) {
 		this.taskRepository = taskRepository;
+	}
+
+	public List<EmployeeEntry> getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(List<EmployeeEntry> employees) {
+		this.employees = employees;
 	}
 
 	public void saveTaskStatus(CurrentTaskStatus currentTaskStatus) {

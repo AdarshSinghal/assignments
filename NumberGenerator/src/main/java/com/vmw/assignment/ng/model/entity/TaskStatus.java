@@ -1,4 +1,4 @@
-package com.vmw.assignment.ng.model.dto;
+package com.vmw.assignment.ng.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

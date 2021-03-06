@@ -1,4 +1,4 @@
-package com.vmw.assignment.ng.model.dto;
+package com.vmw.assignment.ng.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,9 +17,9 @@ public class Employee {
 	public Employee() {
 	}
 
-	public Employee(String name, Integer resources) {
+	public Employee(String name, Integer age) {
 		this.name = name;
-		this.age = resources;
+		this.age = age;
 	}
 
 	public Long getId() {

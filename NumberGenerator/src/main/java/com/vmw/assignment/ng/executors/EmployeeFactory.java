@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.vmw.assignment.ng.model.CurrentTaskStatus;
 import com.vmw.assignment.ng.model.EmployeeEntry;
 import com.vmw.assignment.ng.model.RequestScopedParameter;
-import com.vmw.assignment.ng.model.dto.Employee;
+import com.vmw.assignment.ng.model.entity.Employee;
 import com.vmw.assignment.ng.repository.EmployeeRepository;
 
 @Component

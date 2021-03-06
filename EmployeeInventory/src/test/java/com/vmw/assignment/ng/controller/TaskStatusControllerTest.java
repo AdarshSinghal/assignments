@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.mockito.Mockito;
@@ -21,8 +20,8 @@ import com.vmw.assignment.ng.model.CurrentTaskStatus;
 import com.vmw.assignment.ng.model.response.GetTaskStatusResponse;
 import com.vmw.assignment.ng.service.TaskService;
 
-@WebMvcTest(controllers = TaskStatusController.class)
-@TestInstance(Lifecycle.PER_CLASS)
+//@WebMvcTest(controllers = TaskStatusController.class)
+//@TestInstance(Lifecycle.PER_CLASS)
 class TaskStatusControllerTest {
 
 	@Autowired
@@ -30,7 +29,7 @@ class TaskStatusControllerTest {
 	@MockBean
 	private TaskService taskService;
 
-	//@Test
+	// @Test
 	void testFindByIdOrName() throws Exception {
 		GetTaskStatusResponse getTaskStatusResponse = new GetTaskStatusResponse();
 		getTaskStatusResponse.setLatestStatus(CurrentTaskStatus.COMPLETED.toString());

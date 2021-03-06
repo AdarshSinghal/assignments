@@ -21,12 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vmw.assignment.ng.model.CurrentTaskStatus;
-import com.vmw.assignment.ng.model.entity.Employee;
+import com.vmw.assignment.ng.model.dto.Employee;
 import com.vmw.assignment.ng.model.response.UploadEmployeeResponse;
 import com.vmw.assignment.ng.service.EmployeeService;
 
-@WebMvcTest(controllers = EmployeeController.class)
-@TestInstance(Lifecycle.PER_CLASS)
+//@WebMvcTest(controllers = EmployeeController.class)
+//@TestInstance(Lifecycle.PER_CLASS)
 class EmployeeControllerTest {
 
 	@Autowired
@@ -34,7 +34,7 @@ class EmployeeControllerTest {
 	@MockBean
 	private EmployeeService employeeService;
 
-	//@Test
+	// @Test
 	void testFindByIdOrName() throws Exception {
 		Employee employee = new Employee();
 		employee.setId(1l);
@@ -47,13 +47,13 @@ class EmployeeControllerTest {
 				.andExpect(content().json(new ObjectMapper().writeValueAsString(employee))).andReturn();
 	}
 
-	//@Test
+	// @Test
 	void upload() throws Exception {
 		UploadEmployeeResponse uploadEmployeeResponse = new UploadEmployeeResponse();
 		uploadEmployeeResponse.setStatus(CurrentTaskStatus.COMPLETED.toString());
 		ResponseEntity<UploadEmployeeResponse> response = ResponseEntity.ok(uploadEmployeeResponse);
 
-		when(employeeService.upload(Mockito.any())).thenReturn(response);
+		// when(employeeService.upload(Mockito.any())).thenReturn(response);
 		byte[] fileData = CurrentTaskStatus.COMPLETED.toString().getBytes();
 		mockMvc.perform(
 				post("/api/employees/upload?file=").content(fileData).contentType(MediaType.MULTIPART_FORM_DATA_VALUE))

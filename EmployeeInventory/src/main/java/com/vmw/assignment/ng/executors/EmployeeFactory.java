@@ -12,6 +12,7 @@ import com.vmw.assignment.ng.model.EmployeeEntry;
 import com.vmw.assignment.ng.model.RequestScopedParameter;
 import com.vmw.assignment.ng.model.dto.Employee;
 import com.vmw.assignment.ng.repository.EmployeeRepository;
+import com.vmw.assignment.ng.utils.ThreadUtils;
 
 /**
  * Responsible for creating empoyees.
@@ -28,6 +29,9 @@ public class EmployeeFactory {
 	@Autowired
 	EmployeeRepository employeeRepository;
 
+	@Autowired
+	private ThreadUtils threadUtils;
+
 	/**
 	 * Create employee records from the provided details in request. Identify the
 	 * employees who are not present in database and create them.
@@ -36,6 +40,7 @@ public class EmployeeFactory {
 	 */
 	public void createEmployeeIfNotPresent(List<EmployeeEntry> employees) {
 		requestScopedParameter.saveTaskStatus(CurrentTaskStatus.CHECK_EMP_EXISTS);
+		threadUtils.sleep(10);
 		List<String> employeeNames = employees.stream().map((e) -> e.getName()).collect(Collectors.toList());
 		List<Employee> existingEmployees = employeeRepository.findAllByNameIn(employeeNames);
 
@@ -56,8 +61,10 @@ public class EmployeeFactory {
 		if (!newEmployees.isEmpty()) {
 			requestScopedParameter.saveTaskStatus(CurrentTaskStatus.NEW_EMP_DETECTED);
 			// Add action here before creating employees on NEW_EMP_DETECTED event.
+			threadUtils.sleep(10);
 			requestScopedParameter.saveTaskStatus(CurrentTaskStatus.CREATING_EMPLOYEES);
 			employeeRepository.saveAll(newEmployees);
+
 			requestScopedParameter.saveTaskStatus(CurrentTaskStatus.CREATED_EMPLOYEES);
 		} else {
 			requestScopedParameter.saveTaskStatus(CurrentTaskStatus.SKIPPING_EMP_CREATION);

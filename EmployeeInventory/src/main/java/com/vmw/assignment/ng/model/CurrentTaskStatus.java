@@ -12,7 +12,8 @@ public enum CurrentTaskStatus {
 	CREATING_EMPLOYEES("Creating new employees"), CREATED_EMPLOYEES("Created new employees"),
 	ANALYZE_AGE("Performing age analysis"), AGE_ANALYSIS_COMPLETED("Age analysis successfully completed"),
 	COMPLETED("All tasks completed successfully"), INIT_FAILED("Could not start processing"),
-	TASK_FAILED("Task execution failed");
+
+	VALIDATION_FAILED("Validation failed");
 
 	private String status;
 

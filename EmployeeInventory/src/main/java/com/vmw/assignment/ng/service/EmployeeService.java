@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vmw.assignment.ng.constants.Constants;
 import com.vmw.assignment.ng.exceptions.RequestValidationFailedException;
 import com.vmw.assignment.ng.executors.EmployeeTaskExecutor;
@@ -25,6 +27,7 @@ import com.vmw.assignment.ng.model.EmployeeEntry;
 import com.vmw.assignment.ng.model.RequestScopedParameter;
 import com.vmw.assignment.ng.model.UploadEmployeeResponse;
 import com.vmw.assignment.ng.model.dto.Employee;
+import com.vmw.assignment.ng.model.request.TaskRequest;
 import com.vmw.assignment.ng.model.request.UpdateEmployeeRequest;
 import com.vmw.assignment.ng.repository.EmployeeRepository;
 import com.vmw.assignment.ng.utils.CsvReader;
@@ -58,6 +61,12 @@ public class EmployeeService {
 	private CsvWriter csvWriter;
 	@Autowired
 	private CsvReader csvReader;
+
+	@Autowired
+	private PubsubPublisher pubsubPublisher;
+
+	@Value("${spring.cloud.gcp.pubsub.topic.employee.task}")
+	private String topicName;
 
 	/**
 	 * @param id
@@ -119,14 +128,16 @@ public class EmployeeService {
 	 * @return uploadEmployeeResponse
 	 * @throws RequestValidationFailedException
 	 */
-	public ResponseEntity<UploadEmployeeResponse> process(List<EmployeeEntry> employees)
+	public ResponseEntity<UploadEmployeeResponse> process(TaskRequest taskRequest)
 			throws RequestValidationFailedException {
 
+		requestScopedParameter.setTaskId(taskRequest.getTaskId());
 		requestScopedParameter.saveTaskStatus(CurrentTaskStatus.SUBMITTED);
-		employeeTaskExecutor.execute(employees);
+
+		employeeTaskExecutor.execute(taskRequest.getEmployees());
 		UploadEmployeeResponse response = new UploadEmployeeResponse();
 		response.setTaskId(requestScopedParameter.getTaskId());
-		response.setStatus(CurrentTaskStatus.SUBMITTED.toString());
+		response.setStatus(requestScopedParameter.getLatestStatus());
 
 		return ResponseEntity.ok(response);
 	}
@@ -152,20 +163,15 @@ public class EmployeeService {
 	/**
 	 * @param file
 	 * @return uploadEmployeeResponse
-	 * @throws IOException
-	 * @throws RequestValidationFailedException
+	 * @throws Exception
 	 */
-	public ResponseEntity<UploadEmployeeResponse> upload(MultipartFile file)
-			throws IOException, RequestValidationFailedException {
+	public ResponseEntity<UploadEmployeeResponse> upload(MultipartFile file) throws Exception {
 		String uuid = UUID.randomUUID().toString();
 		List<EmployeeEntry> employees = csvReader.readFromFile(file);
-		requestScopedParameter.setEmployees(employees);
-		requestScopedParameter.setTaskId(uuid);
-		process(employees);
+		pubsubPublisher.publish(topicName, new ObjectMapper().writeValueAsString(new TaskRequest(uuid, employees)));
 		UploadEmployeeResponse response = new UploadEmployeeResponse();
 		response.setTaskId(uuid);
-		response.setStatus(requestScopedParameter.getTaskStatusList()
-				.get(requestScopedParameter.getTaskStatusList().size() - 1).getStatus());
+		response.setStatus(CurrentTaskStatus.SUBMITTED.toString());
 
 		return ResponseEntity.ok(response);
 	}

@@ -77,7 +77,7 @@ public class RequestValidator {
 			throw new RequestValidationFailedException(Constants.EXACTLY_1_REQUEST_PARAMETER_IS_REQUIRED);
 		}
 
-		if (count < 1 || count > 1000000) {
+		if (count!=null && (count < 1 || count > 1000000)) {
 			throw new RequestValidationFailedException(Constants.VALUE_FOR_COUNT_SHOULD_BE_IN_RANGE_1_1M);
 		}
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.vmw.assignment.ng.model.CurrentTaskStatus;
 import com.vmw.assignment.ng.model.EmployeeEntry;
 import com.vmw.assignment.ng.model.RequestScopedParameter;
+import com.vmw.assignment.ng.utils.ThreadUtils;
 
 /**
  * This class encapsulates the age analysis responsibilities.
@@ -21,6 +22,9 @@ public class AgeAnalyzer {
 	@Autowired
 	RequestScopedParameter requestScopedParameter;
 
+	@Autowired
+	private ThreadUtils threadUtils;
+
 	/**
 	 * Perform analysis on employee's mentioned age based on their age in database.
 	 * 
@@ -30,7 +34,7 @@ public class AgeAnalyzer {
 
 		requestScopedParameter.saveTaskStatus(CurrentTaskStatus.ANALYZE_AGE);
 		// Performing age analysis
-
+		threadUtils.sleep(10);
 		requestScopedParameter.saveTaskStatus(CurrentTaskStatus.AGE_ANALYSIS_COMPLETED);
 	}
 

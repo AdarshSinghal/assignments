@@ -1,6 +1,7 @@
 package com.vmw.assignment.ng.controller;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vmw.assignment.ng.exceptions.RequestValidationFailedException;
 import com.vmw.assignment.ng.model.EmployeeEntry;
+import com.vmw.assignment.ng.model.PubsubMessageWrapper;
 import com.vmw.assignment.ng.model.UploadEmployeeResponse;
 import com.vmw.assignment.ng.model.dto.Employee;
+import com.vmw.assignment.ng.model.request.TaskRequest;
 import com.vmw.assignment.ng.model.request.UpdateEmployeeRequest;
 import com.vmw.assignment.ng.service.EmployeeService;
 
@@ -35,7 +40,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("/api/employee")
+@RequestMapping("/api/employees")
 public class EmployeeController {
 
 	@Autowired
@@ -70,8 +75,7 @@ public class EmployeeController {
 
 	@RequestMapping(path = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ApiOperation(value = "Upload employee.csv and perform batch job on records.")
-	public ResponseEntity<UploadEmployeeResponse> upload(@RequestParam("file") MultipartFile file)
-			throws IOException, RequestValidationFailedException {
+	public ResponseEntity<UploadEmployeeResponse> upload(@RequestParam("file") MultipartFile file) throws Exception {
 		return employeeService.upload(file);
 	}
 
@@ -82,10 +86,14 @@ public class EmployeeController {
 		return employeeService.download(employees, count);
 	}
 
-	@PostMapping("/process")
-	public ResponseEntity<UploadEmployeeResponse> process(@RequestBody List<EmployeeEntry> employees)
-			throws RequestValidationFailedException {
-		return employeeService.process(employees);
+	@PostMapping("/task/listener")
+	public ResponseEntity<UploadEmployeeResponse> process(@RequestBody PubsubMessageWrapper pubsubMessageWrapper)
+			throws RequestValidationFailedException, JsonProcessingException {
+		String base64EncodedData = pubsubMessageWrapper.getMessage().getData();
+		byte[] decodedBytes = Base64.getMimeDecoder().decode(base64EncodedData);
+		String jsonData = new String(decodedBytes);
+		TaskRequest taskRequest = new ObjectMapper().readValue(jsonData, TaskRequest.class);
+		return employeeService.process(taskRequest);
 	}
 
 }

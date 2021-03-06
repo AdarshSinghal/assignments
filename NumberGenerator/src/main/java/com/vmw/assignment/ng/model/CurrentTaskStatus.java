@@ -16,6 +16,7 @@ public enum CurrentTaskStatus {
 		this.status = status;
 	}
 
+	@Override
 	public String toString() {
 		return this.status;
 	}

@@ -2,6 +2,10 @@ package com.vmw.assignment.ng.model.dto;
 
 import java.io.Serializable;
 
+/**
+ * @author adarsh
+ *
+ */
 public class TaskStatusId implements Serializable {
 
 	private static final long serialVersionUID = -8278835896898050759L;

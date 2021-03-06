@@ -7,8 +7,14 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.vmw.assignment.ng.constants.SwaggerConstants;
 
-//If you move this into Controller package, it will be listed in Swagger which we dont want. 
-//Another approach is to configure swagger to ignore this particular controller
+/**
+ * Redirects the user to swagger page. If you move this into Controller package,
+ * it will be listed in Swagger which we dont want. Another approach is to
+ * configure swagger to ignore this particular controller
+ * 
+ * @author adarsh
+ *
+ */
 @Controller
 public class WelcomePageRedirectConfig {
 

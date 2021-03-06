@@ -1,5 +1,9 @@
 package com.vmw.assignment.ng.model;
 
+/**
+ * @author adarsh
+ *
+ */
 public enum CurrentTaskStatus {
 
 	SUBMITTED("Submitted for processing"), VALIDATION_STARTS("Request validation in progress"),

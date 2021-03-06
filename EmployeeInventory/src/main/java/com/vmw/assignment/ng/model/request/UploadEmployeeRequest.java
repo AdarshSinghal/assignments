@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.vmw.assignment.ng.model.EmployeeEntry;
 
+/**
+ * @author adarsh
+ *
+ */
 public class UploadEmployeeRequest {
 
 	List<EmployeeEntry> employees;

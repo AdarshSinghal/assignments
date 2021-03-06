@@ -13,6 +13,12 @@ import com.vmw.assignment.ng.model.RequestScopedParameter;
 import com.vmw.assignment.ng.model.dto.Employee;
 import com.vmw.assignment.ng.repository.EmployeeRepository;
 
+/**
+ * Responsible for creating empoyees.
+ * 
+ * @author adarsh
+ *
+ */
 @Component
 public class EmployeeFactory {
 
@@ -22,6 +28,12 @@ public class EmployeeFactory {
 	@Autowired
 	EmployeeRepository employeeRepository;
 
+	/**
+	 * Create employee records from the provided details in request. Identify the
+	 * employees who are not present in database and create them.
+	 * 
+	 * @param employees
+	 */
 	public void createEmployeeIfNotPresent(List<EmployeeEntry> employees) {
 		requestScopedParameter.saveTaskStatus(CurrentTaskStatus.CHECK_EMP_EXISTS);
 		List<String> employeeNames = employees.stream().map((e) -> e.getName()).collect(Collectors.toList());

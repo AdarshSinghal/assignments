@@ -1,5 +1,11 @@
 package com.vmw.assignment.ng.constants;
 
+/**
+ * Swagger related constants should be maintained here.
+ * 
+ * @author adarsh
+ *
+ */
 public class SwaggerConstants {
 
 	private SwaggerConstants() {

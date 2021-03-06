@@ -1,12 +1,21 @@
 package com.vmw.assignment.ng.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.vmw.assignment.ng.constants.Constants;
 import com.vmw.assignment.ng.exceptions.RequestValidationFailedException;
@@ -18,10 +27,20 @@ import com.vmw.assignment.ng.model.UploadEmployeeResponse;
 import com.vmw.assignment.ng.model.dto.Employee;
 import com.vmw.assignment.ng.model.request.UpdateEmployeeRequest;
 import com.vmw.assignment.ng.repository.EmployeeRepository;
+import com.vmw.assignment.ng.utils.CsvReader;
+import com.vmw.assignment.ng.utils.CsvWriter;
 import com.vmw.assignment.ng.utils.RequestValidator;
 
+/**
+ * Business logics for Employee operations are maintained in this class.
+ * 
+ * @author adarsh
+ *
+ */
 @Service
 public class EmployeeService {
+
+	private static final String EMPLOYEE_S_CSV = "Employee_%s.csv";
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -31,13 +50,24 @@ public class EmployeeService {
 
 	@Autowired
 	EmployeeTaskExecutor employeeTaskExecutor;
-	
+
 	@Autowired
 	private RequestValidator requestValidator;
 
+	@Autowired
+	private CsvWriter csvWriter;
+	@Autowired
+	private CsvReader csvReader;
+
+	/**
+	 * @param id
+	 * @param name
+	 * @return employee
+	 * @throws RequestValidationFailedException
+	 */
 	public Employee findByIdOrName(Long id, String name) throws RequestValidationFailedException {
 
-		validateFilters(id, name);
+		requestValidator.validateFilters(id, name);
 
 		if (id != null)
 			return employeeRepository.findById(id).orElseThrow();
@@ -45,10 +75,19 @@ public class EmployeeService {
 		return employeeRepository.findByName(name).orElseThrow();
 	}
 
+	/**
+	 * @param employee
+	 * @return employee
+	 */
 	public Employee save(EmployeeEntry employee) {
 		return employeeRepository.save(new Employee(employee.getName(), employee.getAge()));
 	}
 
+	/**
+	 * @param updateEmployeeRequest
+	 * @return employee
+	 * @throws RequestValidationFailedException
+	 */
 	public Employee update(UpdateEmployeeRequest updateEmployeeRequest) throws RequestValidationFailedException {
 
 		Long requestEmployeeId = updateEmployeeRequest.getId();
@@ -75,35 +114,127 @@ public class EmployeeService {
 		return employeeRepository.save(existingEmployee);
 	}
 
+	/**
+	 * @param employees
+	 * @return uploadEmployeeResponse
+	 * @throws RequestValidationFailedException
+	 */
 	public ResponseEntity<UploadEmployeeResponse> process(List<EmployeeEntry> employees)
 			throws RequestValidationFailedException {
-		String uuid = UUID.randomUUID().toString();
-		requestScopedParameter.setTaskId(uuid);
+
 		requestScopedParameter.saveTaskStatus(CurrentTaskStatus.SUBMITTED);
 		employeeTaskExecutor.execute(employees);
 		UploadEmployeeResponse response = new UploadEmployeeResponse();
-		response.setTaskId(uuid);
+		response.setTaskId(requestScopedParameter.getTaskId());
 		response.setStatus(CurrentTaskStatus.SUBMITTED.toString());
 
 		return ResponseEntity.ok(response);
 	}
-	
-	public ResponseEntity<String> delete(Long id, String name) throws RequestValidationFailedException {
-		validateFilters(id, name);
+
+	/**
+	 * @param id
+	 * @param name
+	 * @return employee
+	 * @throws RequestValidationFailedException
+	 */
+	public Employee delete(Long id, String name) throws RequestValidationFailedException {
+		// Delete operations are very rare. Hence, 1 extra query is preferred to return
+		// deleted employees.
+		Employee employee = findByIdOrName(id, name);
 		if (id != null) {
 			employeeRepository.deleteById(id);
 		} else {
-			// To achive api behavior like above one, return 204 if data not found
-			employeeRepository.findByName(name).orElseThrow();
 			employeeRepository.deleteByName(name);
 		}
-		return ResponseEntity.ok().build();
+		return employee;
 	}
 
-	private void validateFilters(Long id, String name) throws RequestValidationFailedException {
-		boolean blankName = StringUtils.isBlank(name);
-		if ((id == null && blankName) || (id != null && !blankName))
-			throw new RequestValidationFailedException(Constants.REQUIRED_ONE_QUERY_PARAMETER_ID_OR_NAME);
+	/**
+	 * @param file
+	 * @return uploadEmployeeResponse
+	 * @throws IOException
+	 * @throws RequestValidationFailedException
+	 */
+	public ResponseEntity<UploadEmployeeResponse> upload(MultipartFile file)
+			throws IOException, RequestValidationFailedException {
+		String uuid = UUID.randomUUID().toString();
+		List<EmployeeEntry> employees = csvReader.readFromFile(file);
+		requestScopedParameter.setEmployees(employees);
+		requestScopedParameter.setTaskId(uuid);
+		process(employees);
+		UploadEmployeeResponse response = new UploadEmployeeResponse();
+		response.setTaskId(uuid);
+		response.setStatus(requestScopedParameter.getTaskStatusList()
+				.get(requestScopedParameter.getTaskStatusList().size() - 1).getStatus());
+
+		return ResponseEntity.ok(response);
+	}
+
+	/**
+	 * @param employees
+	 * @param count
+	 * @return resource
+	 * @throws RequestValidationFailedException
+	 * @throws IOException
+	 */
+	public ResponseEntity<Resource> download(List<String> employees, Integer count)
+			throws RequestValidationFailedException, IOException {
+		requestValidator.validateRequestParam(employees, count);
+		if (count != null) {
+			return download(count);
+		}
+		return download(employees);
+	}
+
+	/**
+	 * @param employees
+	 * @return resource
+	 * @throws IOException
+	 * @throws RequestValidationFailedException
+	 */
+	public ResponseEntity<Resource> download(List<String> employees)
+			throws IOException, RequestValidationFailedException {
+
+		requestValidator.validateDataForCSVWrite(employees);
+
+		File file = csvWriter.writeValuesToFile(employees);
+
+		InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+		HttpHeaders respHeaders = new HttpHeaders();
+		respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		respHeaders.setContentLength(file.length());
+		String fileName = String.format(EMPLOYEE_S_CSV, UUID.randomUUID().toString().substring(0, 3));
+		respHeaders.setContentDispositionFormData(Constants.ATTACHMENT, fileName);
+		return ResponseEntity.ok().headers(respHeaders).contentLength(file.length())
+				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+	}
+
+	/**
+	 * @param count
+	 * @return resource
+	 * @throws IOException
+	 * @throws RequestValidationFailedException
+	 */
+	public ResponseEntity<Resource> download(int count) throws IOException, RequestValidationFailedException {
+		List<String> employees = new ArrayList<>();
+		for (int i = 0; i < count; i++) {
+			employees.add(UUID.randomUUID().toString() + ":" + (int) (80 - 60 * Math.random()));
+		}
+
+		requestValidator.validateDataForCSVWrite(employees);
+
+		File file = csvWriter.writeValuesToFile(employees);
+
+		InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+		HttpHeaders respHeaders = new HttpHeaders();
+		respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		respHeaders.setContentLength(file.length());
+		String fileName = String.format(EMPLOYEE_S_CSV, UUID.randomUUID().toString().substring(0, 3));
+		respHeaders.setContentDispositionFormData(Constants.ATTACHMENT, fileName);
+		return ResponseEntity.ok().headers(respHeaders).contentLength(file.length())
+				.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
 	}
 
 }

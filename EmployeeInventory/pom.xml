@@ -114,7 +114,7 @@
 				<configuration>
 					<deploy.stopPreviousVersion>true</deploy.stopPreviousVersion>
 					<deploy.promote>true</deploy.promote>
-					<deploy.projectId>composite-area-305607</deploy.projectId>
+					<deploy.projectId>#PID#</deploy.projectId>
 					<deploy.version>dev2</deploy.version>
 				</configuration>
 			</plugin>

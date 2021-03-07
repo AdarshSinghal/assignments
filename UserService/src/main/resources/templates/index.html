@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:replace="fragments/head :: common-header">
+</head>
+
+<body>
+	<!-- 	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#" th:href="@{/}">Registration and
+					Login Module</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav> -->
+
+	<nav th:replace="fragments/navbar :: navbar"></nav>
+
+	<br>
+	<br>
+	<div class="container">
+
+		<!-- <div sec:authorize="isAuthenticated()">
+			Yes... Authenticated
+
+			<p>
+				Welcome <span sec:authentication="principal.email">User</span>
+			</p>
+		</div> -->
+
+	
+
+		<div class='row'>
+			<div class='col-md-6'>
+				<div class="card mb-5">
+					<div class="p-2 text-center">Leading Change: Accelerate Your
+						App and Cloud Transformation</div>
+					<!--Card content-->
+					<div class="card-block p-5">
+						<img src='/images/vmware-leading-change.jpg'>
+						<h4 class="card-title">App Modernization</h4>
+						<p class="card-text">Build new cloud-native apps, modernize
+							existing apps, and operate infrastructure that serves them all
+							across any cloud.</p>
+					</div>
+					<!--/.Card content-->
+				</div>
+
+
+			</div>
+			<div class='col-md-6'></div>
+		</div>
+
+
+
+		<div
+			th:replace="fragments/articles :: allArticles(articles=${articlesList})"></div>
+		<hr class="extra-margins">
+
+	</div>
+
+	<script th:replace="fragments/scripts :: common"></script>
+	<script type="text/javascript" src="/js/home.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+
+<div xmlns:th="www.thymeleaf.com"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	th:fragment="navbar" th:remove="tag">
+	<!--Main Navigation-->
+	<header>
+		<nav class="navbar navbar-expand-lg ">
+			<a class="navbar-brand font-weight-bold align-middle" href="/">Users
+				Inventory</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul id="navbar-ul-all" class="navbar-nav mr-auto">
+
+				</ul>
+				<ul class="navbar-nav nav-flex-icons">
+					<li sec:authorize="isAnonymous()"><a class='btn btn-primary'
+						id="
+						login" href="/login">Login</a></li>
+					<li sec:authorize="isAuthenticated()"><a
+						class='btn btn-danger' id="logout" th:href="@{/logout}">Logout</a></li>
+				</ul>
+			</div>
+		</nav>
+		<div class="gradient-hr"></div>
+	</header>
+	<!--Main Navigation-->
+</div>

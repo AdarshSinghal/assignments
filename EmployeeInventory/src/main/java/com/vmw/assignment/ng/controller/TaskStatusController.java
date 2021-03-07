@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vmw.assignment.ng.model.response.GetTaskStatusResponse;
 import com.vmw.assignment.ng.service.TaskService;
 
-import io.swagger.annotations.ApiOperation;
-
 /**
  * Operations for Task Status
  * 
@@ -26,7 +24,7 @@ public class TaskStatusController {
 	private TaskService taskService;
 
 	@GetMapping("/{taskId}")
-	@ApiOperation(value = "Find task status by task id.")
+	//@ApiOperation(value = "Find task status by task id.")
 	public ResponseEntity<GetTaskStatusResponse> getTaskStatus(@PathVariable String taskId) {
 		return taskService.getTaskStatus(taskId);
 	}

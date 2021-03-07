@@ -31,8 +31,6 @@ import com.vmw.assignment.ng.model.request.TaskRequest;
 import com.vmw.assignment.ng.model.request.UpdateEmployeeRequest;
 import com.vmw.assignment.ng.service.EmployeeService;
 
-import io.swagger.annotations.ApiOperation;
-
 /**
  * Operations for Employees.
  * 
@@ -47,40 +45,40 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 
 	@GetMapping
-	@ApiOperation(value = "Find Employee by Id or Name. Exactly One query parameter should be used.")
+	//@ApiOperation(value = "Find Employee by Id or Name. Exactly One query parameter should be used.")
 	public Employee findByIdOrName(@RequestParam(required = false) Long id, @RequestParam(required = false) String name)
 			throws RequestValidationFailedException {
 		return employeeService.findByIdOrName(id, name);
 	}
 
 	@PostMapping
-	@ApiOperation(value = "Add new employee. All fields are mandatory.")
+	//@ApiOperation(value = "Add new employee. All fields are mandatory.")
 	public ResponseEntity<Employee> save(@RequestBody EmployeeEntry employee) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.save(employee));
 	}
 
 	@PutMapping
-	@ApiOperation(value = "Update employee detail. All fields are mandatory.")
+	//@ApiOperation(value = "Update employee detail. All fields are mandatory.")
 	public ResponseEntity<Employee> update(@RequestBody UpdateEmployeeRequest employee)
 			throws RequestValidationFailedException {
 		return ResponseEntity.ok(employeeService.update(employee));
 	}
 
 	@DeleteMapping
-	@ApiOperation(value = "Delete Employee by Id or Name. Exactly One query parameter should be used.")
+	//@ApiOperation(value = "Delete Employee by Id or Name. Exactly One query parameter should be used.")
 	public ResponseEntity<Employee> delete(@RequestParam(required = false) Long id,
 			@RequestParam(required = false) String name) throws RequestValidationFailedException {
 		return ResponseEntity.ok(employeeService.delete(id, name));
 	}
 
 	@RequestMapping(path = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	@ApiOperation(value = "Upload employee.csv and perform batch job on records.")
+	//@ApiOperation(value = "Upload employee.csv and perform batch job on records.")
 	public ResponseEntity<UploadEmployeeResponse> upload(@RequestParam("file") MultipartFile file) throws Exception {
 		return employeeService.upload(file);
 	}
 
 	@PostMapping("/download")
-	@ApiOperation(value = "Generate and Download the CSV file through Employee details passed as request parameter. [Format for 1 record: Adarsh:27]")
+	//@ApiOperation(value = "Generate and Download the CSV file through Employee details passed as request parameter. [Format for 1 record: Adarsh:27]")
 	public ResponseEntity<Resource> download(@RequestParam(required = false) List<String> employees,
 			@RequestParam(required = false) Integer count) throws RequestValidationFailedException, IOException {
 		return employeeService.download(employees, count);

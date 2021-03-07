@@ -1,0 +1,16 @@
+/build/
+
+/.classpath
+
+/.project
+
+/.project
+
+/target/
+
+/target/**
+/.settings
+/.settings/**
+/bin/
+/bin/**
+/.factorypath

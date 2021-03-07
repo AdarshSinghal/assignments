@@ -9,6 +9,15 @@ public class EmployeeEntry {
 	private String name;
 	private Integer age;
 
+	public EmployeeEntry() {
+
+	}
+
+	public EmployeeEntry(String name, Integer age) {
+		this.name = name;
+		this.age = age;
+	}
+
 	public String getName() {
 		return name;
 	}

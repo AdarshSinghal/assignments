@@ -70,4 +70,8 @@ public class RequestScopedParameter {
 		taskRepository.save(taskStatus);
 	}
 
+	public String getLatestStatus() {
+		return getTaskStatusList().get(getTaskStatusList().size() - 1).getStatus();
+	}
+
 }

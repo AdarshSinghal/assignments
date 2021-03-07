@@ -37,10 +37,13 @@ public class RecordsValidator {
 		List<EmployeeEntry> validAgeGroupEmployees = employees.stream()
 				.filter((e) -> e.getAge() > 20 && e.getAge() < 100).collect(Collectors.toList());
 		// If there is no employee with valid age, then stop further processing.
-		if (validAgeGroupEmployees.isEmpty())
+		if (validAgeGroupEmployees.isEmpty()) {
+			requestScopedParameter.saveTaskStatus(CurrentTaskStatus.VALIDATION_FAILED);
 			throw new RequestValidationFailedException();
+		}
 
-		employees = validAgeGroupEmployees;
+		employees.clear();
+		employees.addAll(validAgeGroupEmployees);
 
 		// Execution of this line means validation passed.
 		requestScopedParameter.saveTaskStatus(CurrentTaskStatus.VALIDATION_ENDS);

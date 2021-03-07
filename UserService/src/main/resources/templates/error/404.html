@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.com">
+
+<head th:replace="fragments/head :: common-header">
+
+</head>
+
+<body>
+
+	<nav th:replace="fragments/navbar :: navbar"></nav>
+
+	<div class="row">
+		<div class="col-md-6">
+			<img class="mt-4 rounded mx-auto d-block"
+				src="/images/underwater.png">
+
+			<h1 class="text-center mt-3">Page Not Found!</h1>
+
+			<h2 class="text-center mt-3">Check the URL you provided</h2>
+		</div>
+		<div class="col-md-6"></div>
+	</div>
+
+
+	<div th:replace="fragments/pagefooter :: commonfooter"></div>
+
+
+	<script th:replace="fragments/scripts :: common"></script>
+
+
+</body>
+
+</html>

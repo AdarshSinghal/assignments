@@ -1,0 +1,12 @@
+<div xmlns:th="www.thymeleaf.com"
+	th:fragment="articleCard (title, videoLink)"
+	th:remove="tag">
+	<div class="card mb-5">
+
+		<!--Card image-->
+		<div class="view overlay hm-white-slight yt">
+			<iframe  th:src="${videoLink}"></iframe>
+		</div>
+
+	</div>
+</div>

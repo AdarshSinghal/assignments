@@ -5,6 +5,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutionException;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,8 +19,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import com.google.api.gax.rpc.NotFoundException;
 import com.vmw.assignment.ng.constants.Constants;
 import com.vmw.assignment.ng.exceptions.RequestValidationFailedException;
+
+import io.grpc.StatusRuntimeException;
 
 /**
  * Exceptions should be handled here. If no exception matchees the current
@@ -39,6 +43,20 @@ public class ApplicationExceptionControllerAdvice {
 	@ExceptionHandler({ MaxUploadSizeExceededException.class })
 	public ResponseEntity<String> fileSizeLimitExceededException(MaxUploadSizeExceededException exception) {
 		return ResponseEntity.badRequest().body(Constants.MAXIMUM_UPLOAD_SIZE_EXCEEDED);
+	}
+
+	@ExceptionHandler({ ExecutionException.class })
+	public ResponseEntity<String> pubsubTopicNotFound(ExecutionException exception) {
+		String message = exception.getMessage();
+		Throwable cause = exception.getCause();
+		if (cause instanceof NotFoundException) {
+			message = cause.getMessage();
+			if (cause.getCause() instanceof StatusRuntimeException) {
+				message = cause.getCause().getMessage();
+			}
+		}
+		return ResponseEntity.badRequest().body(message);
+
 	}
 
 	@ExceptionHandler(value = DataIntegrityViolationException.class)

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.com">
+
+<head th:replace="fragments/head :: common-header">
+
+</head>
+
+<body>
+
+	<nav th:replace="fragments/navbar :: navbar"></nav>
+
+	<img class="mt-3 rounded mx-auto d-block" src="/images/fix.jpg">
+
+	<h1 class="text-center mt-3">Ohh! We faced some challenges while
+		serving you.</h1>
+
+	<h3 class="text-center mt-3">We apologize the inconvenience caused.
+		Our engineers are working hard to fix this.</h3>
+
+
+	<div th:replace="fragments/pagefooter :: commonfooter"></div>
+
+
+	<script th:replace="fragments/scripts :: common"></script>
+
+
+</body>
+
+</html>
